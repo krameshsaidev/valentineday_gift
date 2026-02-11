@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
-   <title> THE FINAL BEAT </title>
+    <title> THE FINAL BEAT </title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Space+Mono&display=swap');
 
@@ -19,9 +18,9 @@
             overflow: hidden;
             font-family: 'Syncopate', sans-serif;
             color: #fff;
+            transition: background-color 0.5s;
         }
 
-        /* --- STAGE & RINGS --- */
         .stage {
             position: relative;
             width: 600px;
@@ -35,9 +34,10 @@
             position: absolute;
             border-radius: 50%;
             border: 3px solid transparent;
-            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), border-color 0.5s ease;
         }
 
+        /* Default Colors & Speeds */
         #days-ring { width: 500px; height: 500px; border-top-color: #00f2ff; animation: rotate 30s linear infinite; }
         #hours-ring { width: 400px; height: 400px; border-right-color: #00f2ff; animation: rotate 20s linear infinite reverse; }
         #mins-ring { width: 300px; height: 300px; border-bottom-color: #00f2ff; animation: rotate 10s linear infinite; }
@@ -45,7 +45,32 @@
 
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* --- HEART & GO --- */
+        /* --- RED SURGE & SPEED UP (Triggers at 1min) --- */
+        .surge-active .ring {
+            border-color: transparent;
+            box-shadow: 0 0 25px #ff0055;
+        }
+        
+        /* All rings turn RED and SPEED UP */
+        .surge-active #days-ring { border-top-color: #ff0055; animation-duration: 4s !important; }
+        .surge-active #hours-ring { border-right-color: #ff0055; animation-duration: 3s !important; }
+        .surge-active #mins-ring { border-bottom-color: #ff0055; animation-duration: 2s !important; }
+        .surge-active #secs-ring { border-left-color: #ff0055; animation-duration: 0.8s !important; }
+
+        .glitch {
+            animation: glitch 0.2s infinite;
+            display: inline-block;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); text-shadow: 2px 2px #ff0055, -2px -2px #00f2ff; }
+            25% { transform: translate(-2px, 2px); }
+            50% { transform: translate(2px, -2px); text-shadow: -2px -2px #ff0055, 2px 2px #00f2ff; }
+            75% { transform: translate(-2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        /* --- HEART & FINAL GO --- */
         #heart-container {
             position: absolute;
             display: none;
@@ -64,7 +89,7 @@
             transform: rotate(-45deg);
             width: 150px;
             box-shadow: 0 0 60px #ff0055;
-            animation: heartBeat 0.8s infinite;
+            animation: heartBeat 0.6s infinite;
         }
 
         .heart:before, .heart:after {
@@ -82,16 +107,18 @@
         .go-text {
             position: absolute;
             z-index: 210;
-            font-size: 3rem;
+            font-size: 3.5rem;
             color: white;
             font-weight: 900;
-            text-shadow: 0 0 15px rgba(0,0,0,0.8);
+            text-shadow: 0 0 20px rgba(0,0,0,0.8);
         }
 
         @keyframes heartBeat {
             0% { transform: rotate(-45deg) scale(1); }
-            15% { transform: rotate(-45deg) scale(1.25); }
+            15% { transform: rotate(-45deg) scale(1.4); }
             30% { transform: rotate(-45deg) scale(1); }
+            45% { transform: rotate(-45deg) scale(1.3); }
+            60% { transform: rotate(-45deg) scale(1); }
         }
 
         @keyframes heartPop {
@@ -99,7 +126,7 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* --- BUILDING PAGE OVERLAY --- */
+        /* --- LOADING OVERLAY --- */
         #building-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -113,8 +140,7 @@
         }
 
         .loader-bar {
-            width: 300px;
-            height: 4px;
+            width: 300px; height: 4px;
             background: #222;
             margin-top: 20px;
             position: relative;
@@ -122,19 +148,15 @@
         }
 
         .loader-progress {
-            width: 0%;
-            height: 100%;
+            width: 0%; height: 100%;
             background: #00f2ff;
             box-shadow: 0 0 15px #00f2ff;
             transition: width 3s linear;
         }
 
         .data-stream {
-            font-size: 10px;
-            color: #00f2ff;
-            opacity: 0.3;
-            position: absolute;
-            white-space: nowrap;
+            font-size: 10px; color: #00f2ff; opacity: 0.3;
+            position: absolute; white-space: nowrap;
             animation: moveStream 2s linear infinite;
         }
 
@@ -143,17 +165,13 @@
             to { transform: translateY(-100vh); }
         }
 
-        .build-msg {
-            letter-spacing: 5px;
-            font-size: 0.8rem;
-            color: #fff;
-            margin-bottom: 10px;
-        }
+        .build-msg { letter-spacing: 5px; font-size: 0.8rem; color: #fff; margin-bottom: 10px; }
 
         /* --- TIMER UI --- */
-        .time-display { text-align: center; z-index: 100; transition: opacity 0.5s; }
-        #countdown-text { font-size: 4rem; font-family: 'Space Mono', monospace; }
-        .critical { color: #ff0055 !important; text-shadow: 0 0 40px #ff0055 !important; }
+        .time-display { text-align: center; z-index: 100; transition: all 0.5s; }
+        #countdown-text { font-size: 4rem; font-family: 'Space Mono', monospace; transition: all 0.3s; }
+        .critical { color: #ff0055 !important; text-shadow: 0 0 40px #ff0055 !important; transform: scale(1.1); }
+        .extreme { transform: scale(1.3); }
     </style>
 </head>
 <body>
@@ -170,18 +188,18 @@
 
         <div id="heart-container">
             <div class="heart"></div>
-            <span class="go-text">GO</span>
+            <span class="go-text">LOVE!</span>
         </div>
     </div>
 
     <div id="building-overlay">
-        <div class="build-msg" id="build-status">RECONSTRUCTING PAGE...</div>
+        <div class="build-msg" id="build-status">PREPARING CORE...</div>
         <div class="loader-bar"><div class="loader-progress" id="progress"></div></div>
         <div id="stream-container"></div>
     </div>
 
     <script>
-        // Set target date (currently 10 seconds for testing)
+        // Set target date
         const targetDate = new Date("Feb 14, 2026 11:00:00").getTime();
         const redirectUrl = "https://krameshsaidev.github.io/valentineday_gift/Cutiee.html";
 
@@ -199,39 +217,48 @@
             const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const s = Math.floor((diff % (1000 * 60)) / 1000);
 
-            document.getElementById('countdown-text').innerText = 
-                `${d.toString().padStart(2, '0')}:${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            const timerEl = document.getElementById('countdown-text');
+            timerEl.innerText = `${d.toString().padStart(2, '0')}:${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 
-            if (diff < 10000) document.getElementById('countdown-text').classList.add('critical');
+            // --- ALL RINGS SPEED UP AT 1 MINUTE ---
+            if (diff < 60000) {
+                document.getElementById('main-stage').classList.add('surge-active');
+                timerEl.classList.add('critical');
+            }
+
+            // 10 Seconds Left: The Glitch Extreme
+            if (diff < 10000) {
+                timerEl.classList.add('glitch', 'extreme');
+                document.body.style.backgroundColor = (s % 2 === 0) ? '#200008' : '#000';
+            }
         }
 
         function triggerFinalSequence() {
             clearInterval(timerInterval);
             
-            // 1. Collapse everything
+            // Explosion Flash
+            document.body.style.backgroundColor = "#fff";
             document.getElementById('timer-ui').style.opacity = '0';
             document.querySelectorAll('.ring').forEach(r => {
-                r.style.width = '0'; r.style.height = '0'; r.style.opacity = '0';
+                r.style.width = '2500px'; r.style.height = '2500px'; r.style.opacity = '0';
             });
 
-            // 2. Show Heart & GO
             setTimeout(() => {
+                document.body.style.backgroundColor = "#000";
                 document.getElementById('heart-container').style.display = 'flex';
                 
-                // 3. Start "Building" slowly after heart beats
                 setTimeout(() => {
                     showBuildingOverlay();
-                }, 2500);
-            }, 500);
+                }, 2000);
+            }, 300);
         }
 
         function showBuildingOverlay() {
             const overlay = document.getElementById('building-overlay');
             overlay.style.display = 'flex';
             
-            // Generate some random hex data streams
             const streamBox = document.getElementById('stream-container');
-            for(let i=0; i<15; i++) {
+            for(let i=0; i<25; i++) {
                 const s = document.createElement('div');
                 s.className = 'data-stream';
                 s.style.left = Math.random() * 100 + 'vw';
@@ -240,15 +267,13 @@
                 streamBox.appendChild(s);
             }
 
-            // Fill Progress Bar
             setTimeout(() => {
                 document.getElementById('progress').style.width = '100%';
                 
-                // Change messages during build
-                setTimeout(() => { document.getElementById('build-status').innerText = "RENDERING ASSETS..."; }, 1000);
-                setTimeout(() => { document.getElementById('build-status').innerText = "SYSTEM READY."; }, 2500);
+                setTimeout(() => { document.getElementById('build-status').innerText = "CALIBRATING EMOTIONS..."; }, 800);
+                setTimeout(() => { document.getElementById('build-status').innerText = "OPENING SURPRISE..."; }, 1800);
+                setTimeout(() => { document.getElementById('build-status').innerText = "DONE."; }, 2800);
 
-                // Final Redirect
                 setTimeout(() => {
                     window.location.href = redirectUrl;
                 }, 3500);
