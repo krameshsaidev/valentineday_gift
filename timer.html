@@ -13,12 +13,51 @@
             background: #000;
             height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow: hidden;
             font-family: 'Syncopate', sans-serif;
             color: #fff;
-            transition: background-color 0.5s;
+            transition: background-color 0.5s ease;
+        }
+
+        /* --- DYNAMIC TOP BANNER --- */
+        .header-text {
+            position: absolute;
+            top: 5%;
+            text-align: center;
+            letter-spacing: 5px;
+            font-size: 0.8rem;
+            color: #00f2ff;
+            text-shadow: 0 0 10px #00f2ff;
+            z-index: 10;
+            padding: 10px 20px;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+            transition: all 0.5s ease;
+        }
+
+        .banner-active {
+            border-color: #ff0055;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.4);
+            animation: bannerPulse 2s infinite;
+        }
+
+        @keyframes bannerPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .sub-text {
+            margin-top: 20px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            text-align: center;
         }
 
         .stage {
@@ -34,10 +73,10 @@
             position: absolute;
             border-radius: 50%;
             border: 3px solid transparent;
-            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), border-color 0.5s ease;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), border-color 0.5s ease, animation-duration 1s ease-in-out;
         }
 
-        /* Default Colors & Speeds */
+        /* --- RING SPEEDS --- */
         #days-ring { width: 500px; height: 500px; border-top-color: #00f2ff; animation: rotate 30s linear infinite; }
         #hours-ring { width: 400px; height: 400px; border-right-color: #00f2ff; animation: rotate 20s linear infinite reverse; }
         #mins-ring { width: 300px; height: 300px; border-bottom-color: #00f2ff; animation: rotate 10s linear infinite; }
@@ -45,136 +84,70 @@
 
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* --- RED SURGE & SPEED UP (Triggers at 1min) --- */
-        .surge-active .ring {
-            border-color: transparent;
-            box-shadow: 0 0 25px #ff0055;
-        }
-        
-        /* All rings turn RED and SPEED UP */
+        /* --- SPEED BOOSTS --- */
+        .speed-up-5 #days-ring { animation-duration: 15s !important; }
+        .speed-up-5 #hours-ring { animation-duration: 10s !important; }
+        .speed-up-5 #mins-ring { animation-duration: 5s !important; }
+        .speed-up-5 #secs-ring { animation-duration: 1.5s !important; }
+
+        .speed-up-3 #days-ring { animation-duration: 8s !important; }
+        .speed-up-3 #hours-ring { animation-duration: 6s !important; }
+        .speed-up-3 #mins-ring { animation-duration: 3s !important; }
+        .speed-up-3 #secs-ring { animation-duration: 1s !important; }
+
+        .surge-active .ring { border-color: transparent; box-shadow: 0 0 25px #ff0055; }
         .surge-active #days-ring { border-top-color: #ff0055; animation-duration: 4s !important; }
         .surge-active #hours-ring { border-right-color: #ff0055; animation-duration: 3s !important; }
         .surge-active #mins-ring { border-bottom-color: #ff0055; animation-duration: 2s !important; }
-        .surge-active #secs-ring { border-left-color: #ff0055; animation-duration: 0.8s !important; }
+        .surge-active #secs-ring { border-left-color: #ff0055; animation-duration: 0.5s !important; }
 
-        .glitch {
-            animation: glitch 0.2s infinite;
-            display: inline-block;
-        }
+        .warning-orange { color: #ffae00 !important; text-shadow: 0 0 20px #ffae00 !important; }
+        .danger-pulse { animation: pulse-bg 1.5s infinite alternate !important; }
+        @keyframes pulse-bg { from { background-color: #000; } to { background-color: #200008; } }
 
+        .glitch { animation: glitch 0.2s infinite; display: inline-block; }
         @keyframes glitch {
             0% { transform: translate(0); text-shadow: 2px 2px #ff0055, -2px -2px #00f2ff; }
-            25% { transform: translate(-2px, 2px); }
             50% { transform: translate(2px, -2px); text-shadow: -2px -2px #ff0055, 2px 2px #00f2ff; }
-            75% { transform: translate(-2px, -2px); }
             100% { transform: translate(0); }
         }
 
-        /* --- HEART & FINAL GO --- */
-        #heart-container {
-            position: absolute;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 200;
-            animation: heartPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        .heart {
-            background-color: #ff0055;
-            display: inline-block;
-            height: 150px;
-            position: relative;
-            transform: rotate(-45deg);
-            width: 150px;
-            box-shadow: 0 0 60px #ff0055;
-            animation: heartBeat 0.6s infinite;
-        }
-
-        .heart:before, .heart:after {
-            content: "";
-            background-color: #ff0055;
-            border-radius: 50%;
-            height: 150px;
-            position: absolute;
-            width: 150px;
-        }
-
+        #heart-container { position: absolute; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 200; animation: heartPop 0.6s forwards; }
+        .heart { background-color: #ff0055; display: inline-block; height: 150px; position: relative; transform: rotate(-45deg); width: 150px; box-shadow: 0 0 60px #ff0055; animation: heartBeat 0.6s infinite; }
+        .heart:before, .heart:after { content: ""; background-color: #ff0055; border-radius: 50%; height: 150px; position: absolute; width: 150px; }
         .heart:before { top: -75px; left: 0; }
         .heart:after { left: 75px; top: 0; }
-
-        .go-text {
-            position: absolute;
-            z-index: 210;
-            font-size: 3.5rem;
-            color: white;
-            font-weight: 900;
-            text-shadow: 0 0 20px rgba(0,0,0,0.8);
-        }
+        .go-text { position: absolute; z-index: 210; font-size: 3.5rem; color: white; font-weight: 900; text-shadow: 0 0 20px rgba(0,0,0,0.8); }
 
         @keyframes heartBeat {
-            0% { transform: rotate(-45deg) scale(1); }
+            0%, 60%, 100% { transform: rotate(-45deg) scale(1); }
             15% { transform: rotate(-45deg) scale(1.4); }
-            30% { transform: rotate(-45deg) scale(1); }
             45% { transform: rotate(-45deg) scale(1.3); }
-            60% { transform: rotate(-45deg) scale(1); }
         }
 
-        @keyframes heartPop {
-            0% { transform: scale(0); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+        #building-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 300; font-family: 'Space Mono', monospace; }
+        .loader-bar { width: 300px; height: 4px; background: #222; margin-top: 20px; position: relative; overflow: hidden; }
+        .loader-progress { width: 0%; height: 100%; background: #00f2ff; box-shadow: 0 0 15px #00f2ff; transition: width 6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .data-stream { font-size: 10px; color: #00f2ff; opacity: 0.15; position: absolute; white-space: nowrap; animation: moveStream 4s linear infinite; }
+        @keyframes moveStream { from { transform: translateY(100vh); } to { transform: translateY(-100vh); } }
+        .build-msg { letter-spacing: 5px; font-size: 0.8rem; color: #fff; margin-bottom: 10px; min-height: 1.5rem; }
 
-        /* --- LOADING OVERLAY --- */
-        #building-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 300;
-            font-family: 'Space Mono', monospace;
-        }
-
-        .loader-bar {
-            width: 300px; height: 4px;
-            background: #222;
-            margin-top: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .loader-progress {
-            width: 0%; height: 100%;
-            background: #00f2ff;
-            box-shadow: 0 0 15px #00f2ff;
-            transition: width 3s linear;
-        }
-
-        .data-stream {
-            font-size: 10px; color: #00f2ff; opacity: 0.3;
-            position: absolute; white-space: nowrap;
-            animation: moveStream 2s linear infinite;
-        }
-
-        @keyframes moveStream {
-            from { transform: translateY(100vh); }
-            to { transform: translateY(-100vh); }
-        }
-
-        .build-msg { letter-spacing: 5px; font-size: 0.8rem; color: #fff; margin-bottom: 10px; }
-
-        /* --- TIMER UI --- */
-        .time-display { text-align: center; z-index: 100; transition: all 0.5s; }
         #countdown-text { font-size: 4rem; font-family: 'Space Mono', monospace; transition: all 0.3s; }
-        .critical { color: #ff0055 !important; text-shadow: 0 0 40px #ff0055 !important; transform: scale(1.1); }
-        .extreme { transform: scale(1.3); }
+
+        @media (max-width: 650px) {
+            .header-text { font-size: 0.6rem; top: 8%; width: 80%; }
+            .stage { width: 90vw; height: 90vw; }
+            #days-ring { width: 80vw; height: 80vw; }
+            #hours-ring { width: 65vw; height: 65vw; }
+            #mins-ring { width: 50vw; height: 50vw; }
+            #secs-ring { width: 35vw; height: 35vw; }
+            #countdown-text { font-size: 8vw; }
+        }
     </style>
 </head>
 <body>
+
+    <div class="header-text" id="header">SYSTEM STATUS: CALIBRATING COUNTDOWN</div>
 
     <div class="stage" id="main-stage">
         <div class="ring" id="days-ring"></div>
@@ -184,6 +157,7 @@
 
         <div class="time-display" id="timer-ui">
             <span id="countdown-text">00:00:00:00</span>
+            <div class="sub-text" id="footer">UNLOCKING FEB 14 @ 5:00 PM</div>
         </div>
 
         <div id="heart-container">
@@ -199,8 +173,8 @@
     </div>
 
     <script>
-        // Set target date
-        const targetDate = new Date("Feb 14, 2026 11:00:00").getTime();
+        // UPDATED TARGET TIME TO 5:00 PM (17:00)
+        const targetDate = new Date("Feb 14, 2026 17:00:00").getTime();
         const redirectUrl = "https://krameshsaidev.github.io/valentineday_gift/Cutiee.html";
 
         function update() {
@@ -218,65 +192,77 @@
             const s = Math.floor((diff % (1000 * 60)) / 1000);
 
             const timerEl = document.getElementById('countdown-text');
+            const stage = document.getElementById('main-stage');
+            const header = document.getElementById('header');
+            
             timerEl.innerText = `${d.toString().padStart(2, '0')}:${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 
-            // --- ALL RINGS SPEED UP AT 1 MINUTE ---
-            if (diff < 60000) {
-                document.getElementById('main-stage').classList.add('surge-active');
-                timerEl.classList.add('critical');
+            if (diff < 300000 && diff >= 180000) {
+                stage.classList.add('speed-up-5');
+                timerEl.classList.add('warning-orange');
+                header.innerText = "5 MINUTE WARNING: PREPARING HEART SYNC";
+                header.classList.add('banner-active');
+                header.style.color = "#ffae00";
             }
 
-            // 10 Seconds Left: The Glitch Extreme
+            if (diff < 180000 && diff >= 60000) {
+                stage.classList.remove('speed-up-5');
+                stage.classList.add('speed-up-3');
+                timerEl.classList.remove('warning-orange');
+                timerEl.classList.add('critical');
+                document.body.classList.add('danger-pulse');
+                header.innerText = "3 MINUTES TO IMPACT: STABILIZING EMOTIONS";
+                header.style.color = "#ff0055";
+            }
+
+            if (diff < 60000) {
+                stage.classList.remove('speed-up-3');
+                stage.classList.add('surge-active');
+                timerEl.style.animation = "glitch 0.4s infinite";
+                header.innerText = "T-MINUS 60s: CORE OVERLOAD DETECTED";
+            }
+
             if (diff < 10000) {
-                timerEl.classList.add('glitch', 'extreme');
-                document.body.style.backgroundColor = (s % 2 === 0) ? '#200008' : '#000';
+                timerEl.classList.add('glitch');
+                document.body.style.backgroundColor = (s % 2 === 0) ? '#200005' : '#000';
+                header.innerText = "CORE ACTIVATION IN T-MINUS " + s + "s";
             }
         }
 
         function triggerFinalSequence() {
             clearInterval(timerInterval);
-            
-            // Explosion Flash
+            document.getElementById('header').style.display = 'none';
             document.body.style.backgroundColor = "#fff";
             document.getElementById('timer-ui').style.opacity = '0';
             document.querySelectorAll('.ring').forEach(r => {
                 r.style.width = '2500px'; r.style.height = '2500px'; r.style.opacity = '0';
             });
-
             setTimeout(() => {
                 document.body.style.backgroundColor = "#000";
                 document.getElementById('heart-container').style.display = 'flex';
-                
-                setTimeout(() => {
-                    showBuildingOverlay();
-                }, 2000);
+                setTimeout(() => { showBuildingOverlay(); }, 3500); 
             }, 300);
         }
 
         function showBuildingOverlay() {
             const overlay = document.getElementById('building-overlay');
             overlay.style.display = 'flex';
-            
             const streamBox = document.getElementById('stream-container');
-            for(let i=0; i<25; i++) {
+            for(let i=0; i<15; i++) {
                 const s = document.createElement('div');
                 s.className = 'data-stream';
                 s.style.left = Math.random() * 100 + 'vw';
-                s.style.animationDelay = Math.random() * 2 + 's';
-                s.innerText = Math.random().toString(16).toUpperCase().substring(2, 15);
+                s.innerText = Math.random().toString(16).toUpperCase().substring(2, 12);
                 streamBox.appendChild(s);
             }
 
             setTimeout(() => {
                 document.getElementById('progress').style.width = '100%';
-                
-                setTimeout(() => { document.getElementById('build-status').innerText = "CALIBRATING EMOTIONS..."; }, 800);
-                setTimeout(() => { document.getElementById('build-status').innerText = "OPENING SURPRISE..."; }, 1800);
-                setTimeout(() => { document.getElementById('build-status').innerText = "DONE."; }, 2800);
-
-                setTimeout(() => {
-                    window.location.href = redirectUrl;
-                }, 3500);
+                setTimeout(() => { document.getElementById('build-status').innerText = "CALIBRATING EMOTIONS..."; }, 2500);
+                setTimeout(() => { document.getElementById('build-status').innerText = "FETCHING SURPRISE_DATA.pkg..."; }, 4500);
+                setTimeout(() => { document.getElementById('build-status').innerText = "FINALIZING CONNECTION..."; }, 6500);
+                setTimeout(() => { document.getElementById('build-status').innerText = "DONE."; }, 8500);
+                setTimeout(() => { window.location.href = redirectUrl; }, 9000); 
             }, 100);
         }
 
